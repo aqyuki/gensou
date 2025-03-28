@@ -1,0 +1,24 @@
+[env]
+XDG_CONFIG_HOME = "~/.config"
+XDG_DATA_HOME = "~/.local/share"
+XDG_STATE_HOME = "~/.local/state"
+XDG_CACHE_HOME = "~/.cache"
+
+[dotfiles]
+bashrc = { source = "~/.config/bash/bashrc", target = "~/.bashrc", method = "symlink", backup = true }
+zshrc = { source = "~/.config/zsh/zshrc", target = "~/.zshrc" }
+vimrc = { source = "dotfiles/vimrc", target = "~/.vimrc", method = "copy" }
+
+[external]
+fzf = { method = "git", source = "https://github.com/junegunn/fzf.git", target = "~/.fzf", depth = 1 }
+ripgrep = { method = "download", source = "https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep-x86_64-linux.tar.gz", target = "~/.local/bin/ripgrep.tar.gz", extract = { format = "tar.gz", strip_components = 1 }, checksum = "...", timeout = 30 }
+zsh_plugins = { method = "git", source = "https://github.com/zsh-users/zsh-plugins.git", target = "~/.zsh/plugins", branch = "master", recurse_submodules = true }
+
+[packages]
+pacman = ["fzf", "ripgrep"]
+apt = ["zsh"]
+brew = []
+
+[options]
+overwrite = false
+backup = true
