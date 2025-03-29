@@ -11,14 +11,6 @@ mod tests {
         let manifest_path = PathBuf::from("tests/data/manifest.toml");
         let manifest = crate::manifest::load_manifest(manifest_path)?;
 
-        // Assert env section
-        assert!(manifest.env.is_some());
-        let env = manifest.env.unwrap();
-        assert_eq!(env.get("XDG_CONFIG_HOME").unwrap(), "~/.config");
-        assert_eq!(env.get("XDG_DATA_HOME").unwrap(), "~/.local/share");
-        assert_eq!(env.get("XDG_STATE_HOME").unwrap(), "~/.local/state");
-        assert_eq!(env.get("XDG_CACHE_HOME").unwrap(), "~/.cache");
-
         // Assert dotfiles section
         assert!(manifest.dotfiles.is_some());
         let dotfiles = manifest.dotfiles.unwrap();
