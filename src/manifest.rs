@@ -1,8 +1,8 @@
 use anyhow::{Context, Result};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, fs, path::Path};
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Manifest {
     pub env: Option<HashMap<String, String>>,
     pub dotfiles: Option<HashMap<String, DotfileEntry>>,
@@ -11,7 +11,7 @@ pub struct Manifest {
     pub options: Option<Options>,
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct DotfileEntry {
     pub source: String,
     pub target: String,
@@ -21,7 +21,7 @@ pub struct DotfileEntry {
     pub backup: bool,
 }
 
-#[derive(Default, Debug, Deserialize, PartialEq)]
+#[derive(Default, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum DotfileMethod {
     #[default]
@@ -29,7 +29,7 @@ pub enum DotfileMethod {
     Copy,
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct ExternalEntry {
     pub method: ExternalMethod,
     pub source: String,
@@ -48,26 +48,52 @@ pub struct ExternalEntry {
     pub recurse_submodules: Option<bool>,
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ExternalMethod {
     Download,
     Git,
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct ExtractOptions {
     pub format: String,
     #[serde(default)]
     pub strip_components: Option<u32>,
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
 pub struct Options {
     #[serde(default)]
     pub overwrite: bool,
     #[serde(default)]
     pub backup: bool,
+}
+
+pub fn new_boilerplate() -> Manifest {
+    let default_env = HashMap::<String, String>::from([
+        (
+            String::from("XDG_CONFIG_HOME"),
+            String::from("$HOME/.config"),
+        ),
+        (
+            String::from("XDG_DATA_HOME"),
+            String::from("$HOME/.local/share"),
+        ),
+        (
+            String::from("XDG_STATE_HOME"),
+            String::from("$HOME/.local/state"),
+        ),
+        (String::from("XDG_CACHE_HOME"), String::from("$HOME/.cache")),
+    ]);
+
+    Manifest {
+        env: Some(default_env),
+        dotfiles: Some(HashMap::new()),
+        external: Some(HashMap::new()),
+        packages: Some(HashMap::new()),
+        options: Some(Options::default()),
+    }
 }
 
 pub fn load_manifest<P: AsRef<Path>>(path: P) -> Result<Manifest> {
