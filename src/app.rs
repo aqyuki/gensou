@@ -5,10 +5,6 @@ use clap::{Parser, Subcommand};
 pub struct Cli {
     #[command(subcommand)]
     pub command: Command,
-
-    /// Path to the manifest file to be used
-    #[arg(short = 'm', long = "manifest")]
-    pub manifest_path: Option<String>,
 }
 
 #[derive(Subcommand, Debug)]
@@ -17,5 +13,9 @@ pub enum Command {
     Init,
 
     /// Apply the manifest file
-    Apply,
+    Apply {
+        /// Path to the manifest file to be used
+        #[arg(short = 'm', long = "manifest")]
+        manifest_path: Option<String>,
+    },
 }
