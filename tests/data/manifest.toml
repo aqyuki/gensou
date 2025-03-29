@@ -1,9 +1,3 @@
-[env]
-XDG_CONFIG_HOME = "~/.config"
-XDG_DATA_HOME = "~/.local/share"
-XDG_STATE_HOME = "~/.local/state"
-XDG_CACHE_HOME = "~/.cache"
-
 [dotfiles]
 bashrc = { source = "~/.config/bash/bashrc", target = "~/.bashrc", method = "symlink", backup = true }
 zshrc = { source = "~/.config/zsh/zshrc", target = "~/.zshrc" }

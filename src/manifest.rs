@@ -4,7 +4,6 @@ use std::{collections::HashMap, fs, path::Path};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Manifest {
-    pub env: Option<HashMap<String, String>>,
     pub dotfiles: Option<HashMap<String, DotfileEntry>>,
     pub external: Option<HashMap<String, ExternalEntry>>,
     pub packages: Option<HashMap<String, Vec<String>>>,
@@ -71,24 +70,7 @@ pub struct Options {
 }
 
 pub fn new_boilerplate() -> Manifest {
-    let default_env = HashMap::<String, String>::from([
-        (
-            String::from("XDG_CONFIG_HOME"),
-            String::from("$HOME/.config"),
-        ),
-        (
-            String::from("XDG_DATA_HOME"),
-            String::from("$HOME/.local/share"),
-        ),
-        (
-            String::from("XDG_STATE_HOME"),
-            String::from("$HOME/.local/state"),
-        ),
-        (String::from("XDG_CACHE_HOME"), String::from("$HOME/.cache")),
-    ]);
-
     Manifest {
-        env: Some(default_env),
         dotfiles: Some(HashMap::new()),
         external: Some(HashMap::new()),
         packages: Some(HashMap::new()),
