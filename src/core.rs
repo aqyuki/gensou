@@ -55,7 +55,8 @@ impl Core {
 
     fn init(&self) -> core::result::Result<(), InitError> {
         // TODO: 絶対パスでファイル作成を行うように変更する
-        let manifest_path = Path::new("manifest.toml");
+        let manifest_path = std::path::absolute(Path::new("manifest.toml"))
+            .context("failed to build manifest file path")?;
 
         if manifest_path.exists() {
             return Err(InitError::AlreadyExist);
@@ -63,14 +64,14 @@ impl Core {
 
         let manifest = manifest::new_boilerplate();
         let content = toml::to_string_pretty(&manifest)?;
-        let mut file = File::create(manifest_path)?;
+        let mut file = File::create(&manifest_path)?;
 
         content
             .lines()
             .try_for_each(|line| writeln!(file, "# {}", line))?;
         file.flush()?;
 
-        let msg = format!("Created manifest file in {}", manifest_path.display());
+        let msg = format!("Created manifest file in {}", &manifest_path.display());
         self.term.write_line(&msg).context("failed to write line")?;
         Ok(())
     }
